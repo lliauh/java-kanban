@@ -18,6 +18,11 @@ public class Main {
         Subtask subtask3 = new Subtask("Сабтаск3", "Описание сабтаска3");
         Subtask subtask4 = new Subtask("Сабтаск4", "Описание сабтаска4");
 
+        Epic epic3 = new Epic("Эпик3", "Описание Эпика3");
+
+        Subtask subtask5 = new Subtask("Сабтаск5", "Описание сабтаска5");
+        Subtask subtask6 = new Subtask("Сабтаск6", "Описание сабтаска6");
+
         manager.createTask(task1);
         manager.createTask(task2);
 
@@ -28,6 +33,12 @@ public class Main {
         manager.createSubtask(subtask2, epic1.getId());
         manager.createSubtask(subtask3, epic1.getId());
         manager.createSubtask(subtask4, epic1.getId());
+
+        manager.createEpic(epic3);
+        manager.createSubtask(subtask5, epic3.getId());
+        manager.createSubtask(subtask6, epic3.getId());
+
+
 
         System.out.println("Проверяем создание и получение всех задач");
         System.out.println("Таски:");
@@ -79,7 +90,7 @@ public class Main {
         System.out.println("Обновился список сабтасок в эпике? - " + manager.getTaskById(3));
         manager.removeEpicById(3);
         System.out.println("Проверяем удаление эпика по ID - " + manager.getTaskById(3));
-        System.out.println("Обновилось значение epicID у сабтасок? - " + manager.getSubtaskById(6));
+        System.out.println("Сабтаски эпика тоже снесли? Если да, то останется только 2 - " + manager.getAllSubtasks());
 
 
         System.out.println("--- --- ---");
@@ -96,7 +107,7 @@ public class Main {
         System.out.println("Обновились идентификаторы эпиков в сабтасках? - " + manager.getAllSubtasks());
         System.out.println("--- --- ---");
         System.out.println("Удаляем сабтаски:");
-        manager.removeSubtasks();
+        manager.removeAllSubtasks();
         System.out.println("Что у нас в сабтасках? - " + manager.getAllSubtasks());
     }
 }

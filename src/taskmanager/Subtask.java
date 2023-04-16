@@ -1,10 +1,14 @@
 package taskmanager;
 
 public class Subtask extends Task {
-    Integer epicId;
+    protected Integer epicId;
 
     public Subtask(String title, String description) {
         super(title, description);
+    }
+
+    public Integer getEpicId() {
+        return epicId;
     }
 
     public void setEpicId(Integer epicId) {

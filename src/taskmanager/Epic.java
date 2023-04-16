@@ -13,6 +13,10 @@ public class Epic extends Task {
         subtasks.add(subtaskId);
     }
 
+    public ArrayList<Integer> getSubtasks() {
+        return subtasks;
+    }
+
     @Override
     public String toString() {
         return "taskmanager.Epic{" +
