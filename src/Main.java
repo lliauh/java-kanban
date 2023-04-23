@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Поехали!");
 
-        Manager manager = new Manager();
+        TaskManager manager = Managers.getDefault();
 
         Task task1 = new Task("Таск1: первое название", "Таск1: первое описание");
         Task task2 = new Task("Таск2: второе название", "Таск2: второе описание");
@@ -55,7 +55,13 @@ public class Main {
 
         System.out.println("Проверяем получение таска по id: " + manager.getTaskById(1));
         System.out.println("Проверяем получение эпика по id: " + manager.getEpicById(3));
+        System.out.println("Проверяем получение истории: " + Managers.getDefaultHistory());
         System.out.println("Проверяем получение сабтаска по id: " + manager.getSubtaskById(5));
+        System.out.println("Проверяем получение таска по id: " + manager.getTaskById(2));
+        System.out.println("Проверяем получение истории: " + Managers.getDefaultHistory());
+        System.out.println("Проверяем получение эпика по id: " + manager.getEpicById(4));
+        System.out.println("Проверяем получение сабтаска по id: " + manager.getSubtaskById(6));
+        System.out.println("Проверяем получение истории: " + Managers.getDefaultHistory());
 
         System.out.println("--- --- ---");
         System.out.println("--- --- ---");
