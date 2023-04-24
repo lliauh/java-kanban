@@ -55,13 +55,13 @@ public class Main {
 
         System.out.println("Проверяем получение таска по id: " + manager.getTaskById(1));
         System.out.println("Проверяем получение эпика по id: " + manager.getEpicById(3));
-        System.out.println("Проверяем получение истории: " + Managers.getDefaultHistory());
+        System.out.println("Проверяем получение истории: " + manager.getHistory());
         System.out.println("Проверяем получение сабтаска по id: " + manager.getSubtaskById(5));
         System.out.println("Проверяем получение таска по id: " + manager.getTaskById(2));
-        System.out.println("Проверяем получение истории: " + Managers.getDefaultHistory());
+        System.out.println("Проверяем получение истории: " + manager.getHistory());
         System.out.println("Проверяем получение эпика по id: " + manager.getEpicById(4));
         System.out.println("Проверяем получение сабтаска по id: " + manager.getSubtaskById(6));
-        System.out.println("Проверяем получение истории: " + Managers.getDefaultHistory());
+        System.out.println("Проверяем получение истории: " + manager.getHistory());
 
         System.out.println("--- --- ---");
         System.out.println("--- --- ---");
