@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-
     private int nextId = 1;
     private HashMap<Integer, Task> tasks = new HashMap<>();
     private HashMap<Integer, Epic> epics = new HashMap<>();
@@ -154,6 +153,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeTaskById(Integer taskId) {
         tasks.remove(taskId);
+        historyManager.remove(taskId);
     }
 
     @Override
@@ -162,6 +162,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(epicId);
         subtasks.remove(subtaskId);
         epic.getSubtasks().remove(subtaskId);
+        historyManager.remove(subtaskId);
 
         boolean subtasksIsEmpty = epic.subtasks.isEmpty();
         boolean allSubtasksAreNew = false;
@@ -192,8 +193,10 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeEpicById(Integer epicId) {
         for (Integer subtaskId : epics.get(epicId).getSubtasks()) {
             subtasks.remove(subtaskId);
+            historyManager.remove(subtaskId);
         }
         epics.remove(epicId);
+        historyManager.remove(epicId);
     }
 
     @Override
