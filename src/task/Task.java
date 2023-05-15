@@ -1,4 +1,4 @@
-package taskmanager;
+package task;
 
 public class Task {
     protected String title;
@@ -46,7 +46,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "taskmanager.Task{" +
+        return "task.Task{" +
                 "id = " + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +

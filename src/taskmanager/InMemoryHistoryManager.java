@@ -1,5 +1,6 @@
 package taskmanager;
 
+import task.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +11,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     private class CustomLinkedList<Task>{
         private Node<Task> head;
         private Node<Task> tail;
-        private int size = 0;
 
         public Node<Task> linkLast(Task element) {
             final Node<Task> oldTail = tail;
@@ -21,7 +21,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             } else {
                 oldTail.next = newNode;
             }
-            size++;
 
             return newNode;
         }
@@ -30,7 +29,8 @@ public class InMemoryHistoryManager implements HistoryManager {
             List<Task> tasks = new ArrayList<>();
 
             Node<Task> element = head;
-            for (int i = 0; i < size; i++) {
+
+            while (element != null) {
                 tasks.add(element.data);
                 element = element.next;
             }
@@ -42,15 +42,12 @@ public class InMemoryHistoryManager implements HistoryManager {
             if (node == head) {
                 head = node.next;
                 node.next.prev = null;
-                size--;
             } else if (node == tail) {
                 tail = node.prev;
                 node.prev.next = null;
-                size--;
             } else {
                 node.prev.next = node.next;
                 node.next.prev = node.prev;
-                size--;
             }
         }
     }

@@ -1,9 +1,10 @@
-package taskmanager;
+package task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
-    protected ArrayList<Integer> subtasks = new ArrayList<>();
+    protected List<Integer> subtasks = new ArrayList<>();
 
     public Epic(String title, String description) {
         super(title, description);
@@ -13,13 +14,13 @@ public class Epic extends Task {
         subtasks.add(subtaskId);
     }
 
-    public ArrayList<Integer> getSubtasks() {
+    public List<Integer> getSubtasks() {
         return subtasks;
     }
 
     @Override
     public String toString() {
-        return "taskmanager.Epic{" +
+        return "task.Epic{" +
                 "id = " + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
