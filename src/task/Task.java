@@ -5,11 +5,15 @@ public class Task {
     protected String description;
     protected int id;
     protected Status status;
+    protected Integer epicId;
+    protected Type type;
+
 
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
         this.status = Status.NEW;
+        this.type = Type.TASK;
     }
 
     public int getId() {
@@ -42,6 +46,18 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getEpicId() {
+        return epicId;
+    }
+
+    public void setEpicId(Integer epicId) {
+        this.epicId = epicId;
+    }
+
+    public Type getType() {
+        return type;
     }
 
     @Override

@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int nextId = 1;
-    private Map<Integer, Task> tasks = new HashMap<>();
-    private Map<Integer, Epic> epics = new HashMap<>();
-    private Map<Integer, Subtask> subtasks = new HashMap<>();
-    private HistoryManager historyManager = Managers.getDefaultHistory();
+    public int nextId = 1;
+    protected Map<Integer, Task> tasks = new HashMap<>();
+    protected Map<Integer, Epic> epics = new HashMap<>();
+    protected Map<Integer, Subtask> subtasks = new HashMap<>();
+    protected HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
     public int createTask(Task task) {
@@ -136,20 +136,32 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(Integer taskId) {
-        historyManager.add(tasks.get(taskId));
-        return tasks.get(taskId);
+        if (tasks.containsKey(taskId)) {
+            historyManager.add(tasks.get(taskId));
+            return tasks.get(taskId);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public Epic getEpicById(Integer epicId) {
-        historyManager.add(epics.get(epicId));
-        return epics.get(epicId);
+        if (epics.containsKey(epicId)) {
+            historyManager.add(epics.get(epicId));
+            return epics.get(epicId);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public Subtask getSubtaskById(Integer subtaskId) {
-        historyManager.add(subtasks.get(subtaskId));
-        return subtasks.get(subtaskId);
+        if (subtasks.containsKey(subtaskId)) {
+            historyManager.add(subtasks.get(subtaskId));
+            return subtasks.get(subtaskId);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -215,5 +227,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+
+    @Override
+    public int getNextId() {
+        return nextId;
     }
 }
