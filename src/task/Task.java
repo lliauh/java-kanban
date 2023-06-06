@@ -1,9 +1,12 @@
 package task;
 
+import java.nio.file.Path;
+import java.util.Objects;
+
 public class Task {
     protected String title;
     protected String description;
-    protected int id;
+    protected Integer id;
     protected Status status;
     protected Integer epicId;
     protected Type type;
@@ -67,5 +70,40 @@ public class Task {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", status = " + status + "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return Objects.equals(title, task.title) && Objects.equals(description, task.description) &&
+                Objects.equals(id, task.id) && Objects.equals(status, task.status) && Objects.equals(type, task.type);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 17;
+        if (title != null) {
+            hash = 31 * (hash + title.hashCode());
+        }
+
+        if (description != null) {
+            hash = 31 * (hash + description.hashCode());
+        }
+
+        if (id != null) {
+            hash = 31 * (hash + id.hashCode());
+        }
+
+        if (status != null) {
+            hash = 31 * (hash + status.hashCode());
+        }
+
+        if (type != null) {
+            hash = 31 * (hash + type.hashCode());
+        }
+
+        return hash;
     }
 }
