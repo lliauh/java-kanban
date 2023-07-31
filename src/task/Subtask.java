@@ -1,10 +1,16 @@
 package task;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Subtask extends Task {
     public Subtask(String title, String description) {
         super(title, description);
+        this.type = Type.SUBTASK;
+    }
+
+    public Subtask(String title, String description, LocalDateTime startTime, Integer duration) {
+        super(title, description, startTime, duration);
         this.type = Type.SUBTASK;
     }
 
@@ -25,7 +31,7 @@ public class Subtask extends Task {
         Subtask subtask = (Subtask) o;
         return Objects.equals(title, subtask.title) && Objects.equals(description, subtask.description) &&
                 Objects.equals(id, subtask.id) && Objects.equals(status, subtask.status) &&
-                Objects.equals(type, subtask.type) &&  Objects.equals(epicId, subtask.epicId);
+                Objects.equals(type, subtask.type) && Objects.equals(epicId, subtask.epicId);
     }
 
     @Override

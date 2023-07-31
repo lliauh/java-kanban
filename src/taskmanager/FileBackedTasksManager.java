@@ -20,21 +20,21 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public int createTask(Task task) {
-        int taskId = super.createTask(task);
+    public Integer createTask(Task task) {
+        Integer taskId = super.createTask(task);
         save();
         return taskId;
     }
 
     @Override
-    public int createEpic(Epic epic) {
+    public Integer createEpic(Epic epic) {
         int epicId = super.createEpic(epic);
         save();
         return epicId;
     }
 
     @Override
-    public int createSubtask(Subtask subtask, Integer epicId) {
+    public Integer createSubtask(Subtask subtask, Integer epicId) {
         int subtaskId = super.createSubtask(subtask, epicId);
         save();
         return subtaskId;
@@ -117,7 +117,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private void save() throws ManagerSaveException {
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(fileName.toFile(), StandardCharsets.UTF_8))) {
-            fileWriter.write("id,type,name,status,description,epic\n");
+            fileWriter.write("id,type,name,status,description,epic,startTime,endTime,duration\n");
 
             for (Task task : tasks.values()) {
                 fileWriter.write(Formatter.toString(task) + "\n");
@@ -163,7 +163,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     manager.updateEpic((Epic) task);
                 } else if (task.getType() == Type.SUBTASK) {
                     manager.updateSubtask((Subtask) task);
-                    manager.epics.get(task.getEpicId()).addSubtask(task.getId());
+                    manager.epics.get(task.getEpicId()).addSubtask((Subtask) task);
                 }
             }
 
@@ -184,86 +184,5 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
 
         return manager;
-    }
-
-    public static void main(String[] args) {
-        System.out.println("Поехали! Проверяем первый менеджер и выгрузку в файл.");
-        TaskManager manager = new FileBackedTasksManager("src/output/backup.csv");
-
-        Task task1 = new Task("Таск1: первое название", "Таск1: первое описание");
-        Task task2 = new Task("Таск2: второе название", "Таск2: второе описание");
-
-        Epic epic1 = new Epic("Эпик1", "Описание Эпика1");
-        Epic epic2 = new Epic("Эпик2", "Описание Эпика2");
-
-        Subtask subtask1 = new Subtask("Сабтаск1", "Описание сабтаска1");
-        Subtask subtask2 = new Subtask("Сабтаск2", "Описание сабтаска2");
-        Subtask subtask3 = new Subtask("Сабтаск3", "Описание сабтаска3");
-
-
-        manager.createTask(task1);
-        manager.createTask(task2);
-
-        manager.createEpic(epic1);
-        manager.createEpic(epic2);
-
-        manager.createSubtask(subtask1, epic1.getId());
-        manager.createSubtask(subtask2, epic1.getId());
-        manager.createSubtask(subtask3, epic1.getId());
-
-        System.out.println("Проверяем вывод всех задач и истории первого менеджера:");
-
-        manager.getTaskById(1);
-        manager.getSubtaskById(5);
-        manager.getSubtaskById(6);
-        manager.getTaskById(2);
-        manager.getEpicById(4);
-        manager.getEpicById(3);
-        manager.getEpicById(3);
-        manager.getTaskById(1);
-        manager.getTaskById(2);
-        manager.getSubtaskById(5);
-        manager.getSubtaskById(6);
-        manager.getSubtaskById(7);
-        manager.getEpicById(4);
-        manager.removeTaskById(2);
-
-        System.out.println(manager.getHistory());
-        System.out.println(manager.getAllTasks());
-
-        System.out.println("В файл выгрузились, проверяем второй менеджер и загрузку из файла.");
-        System.out.println("");
-        System.out.println("");
-
-        TaskManager managerFromFile = loadFromFile(new File("src/output/backup.csv"));
-
-
-        System.out.println("Совпадает ли история у двух менеджеров? - "
-                + manager.getHistory().equals(managerFromFile.getHistory()));
-
-        System.out.println("");
-        System.out.println("");
-
-        System.out.println("Теперь сверим полный набор тасков, эпиков и сабтасков в двух менеджерах:");
-        for (int i = 0; i < manager.getAllTasks().size(); i++) {
-            System.out.println("Таски №" + (i + 1) + " совпали? - "
-                    + manager.getAllTasks().get(i).equals(managerFromFile.getAllTasks().get(i)));
-        }
-
-        for (int i = 0; i < manager.getAllEpics().size(); i++) {
-            System.out.print("Эпики №" + (i + 1) + " совпали? - ");
-            System.out.println(manager.getAllEpics().get(i).equals(managerFromFile.getAllEpics().get(i)));
-        }
-
-        for (int i = 0; i < manager.getAllSubtasks().size(); i++) {
-            System.out.println("Сабтаски №" + (i + 1) + " совпали? - "
-                    + manager.getAllSubtasks().get(i).equals(managerFromFile.getAllSubtasks().get(i)));
-        }
-
-        System.out.println("");
-        System.out.println("");
-
-        System.out.println("Следующие ID задач в двух менеджерах совпали? - "
-                + (manager.getNextId() == managerFromFile.getNextId()));
     }
 }

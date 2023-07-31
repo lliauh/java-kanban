@@ -1,23 +1,66 @@
 package task;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
     protected List<Integer> subtasks = new ArrayList<>();
+    private LocalDateTime endTime;
 
     public Epic(String title, String description) {
         super(title, description);
         this.type = Type.EPIC;
     }
 
-    public void addSubtask(int subtaskId) {
-        subtasks.add(subtaskId);
+    public Epic(String title, String description, LocalDateTime startTime, Integer duration, LocalDateTime endTime) {
+        super(title, description, startTime, duration);
+        this.endTime = endTime;
+        this.type = Type.EPIC;
+    }
+
+    public void addSubtask(Subtask subtask) {
+        if (!subtasks.contains(subtask.getId())) {;
+            subtasks.add(subtask.getId());
+
+            if (subtask.getDuration() != null) {
+                if (duration == null) {
+                    duration = subtask.getDuration();
+                } else {
+                    duration = duration + subtask.getDuration();
+                }
+            }
+
+            if (subtask.getStartTime() != null) {
+                if (startTime == null) {
+                    startTime = subtask.getStartTime();
+                } else {
+                    if (subtask.getStartTime().isBefore(startTime)) {
+                        startTime = subtask.getStartTime();
+                    }
+                }
+            }
+
+            if (subtask.getEndTime() != null) {
+                if (endTime == null) {
+                    endTime = subtask.getEndTime();
+                } else {
+                    if (subtask.getEndTime().isAfter(endTime)) {
+                        endTime = subtask.getEndTime();
+                    }
+                }
+            }
+        }
     }
 
     public List<Integer> getSubtasks() {
         return subtasks;
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
     @Override

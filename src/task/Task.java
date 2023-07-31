@@ -1,6 +1,7 @@
 package task;
 
-import java.nio.file.Path;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -10,11 +11,22 @@ public class Task {
     protected Status status;
     protected Integer epicId;
     protected Type type;
+    protected Integer duration;
+    protected LocalDateTime startTime;
 
 
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
+        this.status = Status.NEW;
+        this.type = Type.TASK;
+    }
+
+    public Task(String title, String description, LocalDateTime startTime, Integer duration) {
+        this.title = title;
+        this.description = description;
+        this.startTime = startTime;
+        this.duration = duration;
         this.status = Status.NEW;
         this.type = Type.TASK;
     }
@@ -52,7 +64,11 @@ public class Task {
     }
 
     public Integer getEpicId() {
-        return epicId;
+        if (epicId != null) {
+            return epicId;
+        } else {
+            return null;
+        }
     }
 
     public void setEpicId(Integer epicId) {
@@ -61,6 +77,30 @@ public class Task {
 
     public Type getType() {
         return type;
+    }
+
+    public LocalDateTime getStartTime() {
+        if (startTime != null) {
+            return startTime;
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime != null && duration != null) {
+            return startTime.plus(Duration.ofMinutes(duration));
+        } else {
+            return null;
+        }
+    }
+
+    public Integer getDuration() {
+        if (duration != null) {
+            return duration;
+        } else {
+            return null;
+        }
     }
 
     @Override

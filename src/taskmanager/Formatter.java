@@ -2,6 +2,8 @@ package taskmanager;
 
 import task.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,10 +11,12 @@ public class Formatter {
     protected static String toString(Task task) {
         if (task.getType() == Type.SUBTASK) {
             return task.getId() + "," + task.getType() + "," + task.getTitle() + "," + task.getStatus() + ","
-                    + task.getDescription() + "," + task.getEpicId();
+                    + task.getDescription() + "," + task.getEpicId() + "," + task.getStartTime() + ","
+                    + task.getEndTime() + "," + task.getDuration();
         } else {
             return task.getId() + "," + task.getType() + "," + task.getTitle() + "," + task.getStatus() + ","
-                    + task.getDescription() + ",";
+                    + task.getDescription() + ",," + task.getStartTime() + "," + task.getEndTime()
+                    + "," + task.getDuration();
         }
     }
 
@@ -20,7 +24,12 @@ public class Formatter {
         String[] split = value.split(",");
         switch (split[1]) {
             case "TASK":
-                Task task = new Task(split[2], split[4]);
+                Task task;
+                if (!split[6].equals("null") && !split[8].equals("null")) {
+                    task = new Task(split[2], split[4], LocalDateTime.parse(split[6]), Integer.parseInt(split[8]));
+                } else {
+                    task = new Task(split[2], split[4]);
+                }
                 task.setId(Integer.parseInt(split[0]));
                 task.setStatus(extractStatusFromString(split[3]));
                 return task;
@@ -30,10 +39,18 @@ public class Formatter {
                 epic.setStatus(extractStatusFromString(split[3]));
                 return epic;
             case "SUBTASK":
-                Subtask subtask = new Subtask(split[2], split[4]);
+                Subtask subtask;
+                if (!split[6].equals("null") && !split[8].equals("null")) {
+                    subtask = new Subtask(split[2], split[4], LocalDateTime.parse(split[6]),
+                            Integer.parseInt(split[8]));
+                } else {
+                    subtask = new Subtask(split[2], split[4]);
+                }
                 subtask.setId(Integer.parseInt(split[0]));
                 subtask.setStatus(extractStatusFromString(split[3]));
-                subtask.setEpicId(Integer.parseInt(split[5]));
+                if (!split[5].isBlank()) {
+                    subtask.setEpicId(Integer.parseInt(split[5]));
+                }
                 return subtask;
         }
 
@@ -64,13 +81,17 @@ public class Formatter {
     }
 
     protected static List<Integer> historyFromString(String value) {
-        String[] splitted = value.split(",");
-        Integer[] splittedInt = new Integer[splitted.length];
+        if (value.isEmpty() || value.isBlank()) {
+            return new ArrayList<>();
+        } else {
+            String[] splitted = value.split(",");
+            Integer[] splittedInt = new Integer[splitted.length];
 
-        for (int i = 0; i < splitted.length; i++) {
-            splittedInt[i] = Integer.valueOf(splitted[i]);
+            for (int i = 0; i < splitted.length; i++) {
+                splittedInt[i] = Integer.valueOf(splitted[i]);
+            }
+
+            return Arrays.asList(splittedInt);
         }
-
-        return Arrays.asList(splittedInt);
     }
 }

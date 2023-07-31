@@ -5,11 +5,11 @@ import java.util.List;
 
 public interface TaskManager {
 
-    int createTask(Task task);
+    Integer createTask(Task task);
 
-    int createEpic(Epic epic);
+    Integer createEpic(Epic epic);
 
-    int createSubtask(Subtask subtask, Integer epicId);
+    Integer createSubtask(Subtask subtask, Integer epicId);
 
     void updateTask(Task task);
 
@@ -46,4 +46,8 @@ public interface TaskManager {
     List<Task> getHistory();
 
     int getNextId();
+
+    List getPrioritizedTasks();
+
+    void tasksTimeIntersectionValidate(Task newTask);
 }

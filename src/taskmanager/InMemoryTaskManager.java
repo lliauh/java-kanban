@@ -1,10 +1,10 @@
 package taskmanager;
 
+import exceptions.TimeIntersectionException;
 import task.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     public int nextId = 1;
@@ -12,17 +12,26 @@ public class InMemoryTaskManager implements TaskManager {
     protected Map<Integer, Epic> epics = new HashMap<>();
     protected Map<Integer, Subtask> subtasks = new HashMap<>();
     protected HistoryManager historyManager = Managers.getDefaultHistory();
+    protected Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime,
+            Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(Task::getId));
 
     @Override
-    public int createTask(Task task) {
-        task.setId(nextId);
-        nextId++;
-        tasks.put(task.getId(), task);
-        return task.getId();
+    public Integer createTask(Task task) {
+        try {
+            task.setId(nextId);
+            tasksTimeIntersectionValidate(task);
+            nextId++;
+            tasks.put(task.getId(), task);
+            prioritizedTasks.add(task);
+            return task.getId();
+        } catch (TimeIntersectionException exception) {
+            System.out.println(exception.getMessage());
+        }
+        return null;
     }
 
     @Override
-    public int createEpic(Epic epic) {
+    public Integer createEpic(Epic epic) {
         epic.setId(nextId);
         nextId++;
         epics.put(epic.getId(), epic);
@@ -30,18 +39,31 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public int createSubtask(Subtask subtask, Integer epicId) {
-        subtask.setId(nextId);
-        nextId++;
-        subtask.setEpicId(epicId);
-        subtasks.put(subtask.getId(), subtask);
-        epics.get(epicId).addSubtask(subtask.getId());
-        return subtask.getId();
+    public Integer createSubtask(Subtask subtask, Integer epicId) {
+        try {
+            subtask.setId(nextId);
+            tasksTimeIntersectionValidate(subtask);
+            nextId++;
+            subtask.setEpicId(epicId);
+            subtasks.put(subtask.getId(), subtask);
+            epics.get(epicId).addSubtask(subtask);
+            prioritizedTasks.add(subtask);
+            return subtask.getId();
+        } catch (TimeIntersectionException exception) {
+            System.out.println(exception.getMessage());
+        }
+        return null;
     }
 
     @Override
     public void updateTask(Task task) {
-        tasks.put(task.getId(), task);
+        try {
+            tasksTimeIntersectionValidate(task);
+            tasks.put(task.getId(), task);
+            prioritizedTasks.add(task);
+        }   catch (TimeIntersectionException exception) {
+            System.out.println(exception.getMessage());
+        }
     }
 
     @Override
@@ -75,29 +97,35 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(Subtask subtask) {
-        if (subtask.getEpicId() != null) {
-            boolean allSubtasksAreNew = true;
-            boolean allSubtasksAreDone = true;
-            Epic epic = epics.get(subtask.getEpicId());
-            for (Integer subtaskId : epic.getSubtasks()) {
-                if (subtasks.get(subtaskId).getStatus() != Status.NEW) {
-                    allSubtasksAreNew = false;
-                }
-                if (subtasks.get(subtaskId).getStatus() != Status.DONE) {
-                    allSubtasksAreDone = false;
-                }
-            }
+        try {
+            tasksTimeIntersectionValidate(subtask);
+            subtasks.put(subtask.getId(), subtask);
+            prioritizedTasks.add(subtask);
 
-            if (allSubtasksAreNew) {
-                epic.setStatus(Status.NEW);
-            } else if (allSubtasksAreDone) {
-                epic.setStatus(Status.DONE);
-            } else {
-                epic.setStatus(Status.IN_PROGRESS);
+            if (subtask.getEpicId() != null) {
+                boolean allSubtasksAreNew = true;
+                boolean allSubtasksAreDone = true;
+                Epic epic = epics.get(subtask.getEpicId());
+                for (Integer subtaskId : epic.getSubtasks()) {
+                    if (subtasks.get(subtaskId).getStatus() != Status.NEW) {
+                        allSubtasksAreNew = false;
+                    }
+                    if (subtasks.get(subtaskId).getStatus() != Status.DONE) {
+                        allSubtasksAreDone = false;
+                    }
+                }
+
+                if (allSubtasksAreNew) {
+                    epic.setStatus(Status.NEW);
+                } else if (allSubtasksAreDone) {
+                    epic.setStatus(Status.DONE);
+                } else {
+                    epic.setStatus(Status.IN_PROGRESS);
+                }
             }
+        } catch (TimeIntersectionException exception) {
+            System.out.println(exception.getMessage());
         }
-
-        subtasks.put(subtask.getId(), subtask);
     }
 
     @Override
@@ -232,5 +260,27 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public int getNextId() {
         return nextId;
+    }
+
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return prioritizedTasks.stream().collect(Collectors.toList());
+    }
+
+    @Override
+    public void tasksTimeIntersectionValidate(Task newTask) throws TimeIntersectionException {
+        if (newTask.getStartTime() == null) {
+            return;
+        }
+
+        for (final Task task : prioritizedTasks) {
+            if (task.getStartTime() == null || task.getEndTime() == null) {
+                return;
+            } else if (task.equals(newTask)) {
+            } else if (!newTask.getStartTime().isAfter(task.getEndTime()) &&
+                    !newTask.getEndTime().isBefore(task.getStartTime())) {
+                throw new TimeIntersectionException("Задачи пересекаются по времени выполнения!");
+            }
+        }
     }
 }
