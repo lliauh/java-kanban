@@ -4,7 +4,8 @@ import exceptions.TimeIntersectionException;
 import task.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     public int nextId = 1;
@@ -264,7 +265,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getPrioritizedTasks() {
-        return prioritizedTasks.stream().collect(Collectors.toList());
+        return new ArrayList<>(prioritizedTasks);
     }
 
     @Override
@@ -276,8 +277,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (final Task task : prioritizedTasks) {
             if (task.getStartTime() == null || task.getEndTime() == null) {
                 return;
-            } else if (task.equals(newTask)) {
-            } else if (!newTask.getStartTime().isAfter(task.getEndTime()) &&
+            } else if (!task.equals(newTask) && !newTask.getStartTime().isAfter(task.getEndTime()) &&
                     !newTask.getEndTime().isBefore(task.getStartTime())) {
                 throw new TimeIntersectionException("Задачи пересекаются по времени выполнения!");
             }

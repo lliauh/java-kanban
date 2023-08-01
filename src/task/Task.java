@@ -64,11 +64,7 @@ public class Task {
     }
 
     public Integer getEpicId() {
-        if (epicId != null) {
-            return epicId;
-        } else {
-            return null;
-        }
+        return epicId;
     }
 
     public void setEpicId(Integer epicId) {
@@ -80,11 +76,7 @@ public class Task {
     }
 
     public LocalDateTime getStartTime() {
-        if (startTime != null) {
-            return startTime;
-        } else {
-            return null;
-        }
+        return startTime;
     }
 
     public LocalDateTime getEndTime() {
@@ -96,11 +88,7 @@ public class Task {
     }
 
     public Integer getDuration() {
-        if (duration != null) {
-            return duration;
-        } else {
-            return null;
-        }
+        return duration;
     }
 
     @Override
