@@ -58,6 +58,10 @@ public class Epic extends Task {
         return subtasks;
     }
 
+    public void setSubtasks(List<Integer> subtasks) {
+        this.subtasks = subtasks;
+    }
+
     @Override
     public LocalDateTime getEndTime() {
         return endTime;
@@ -70,7 +74,11 @@ public class Epic extends Task {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", status = " + status +
-                ", subtasksId = " + subtasks + "}";
+                ", type = " + type + '\'' +
+                ", subtasksId = " + subtasks + '\'' +
+                ", startTime = " + startTime + '\'' +
+                ", endTime = " + startTime + '\'' +
+                ", duration = " + duration + "}";
     }
 
     @Override

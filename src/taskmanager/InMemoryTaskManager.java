@@ -76,11 +76,13 @@ public class InMemoryTaskManager implements TaskManager {
             allSubtasksAreNew = true;
             allSubtasksAreDone = true;
             for (Integer subtaskId : epic.getSubtasks()) {
-                if (subtasks.get(subtaskId).getStatus() != Status.NEW) {
-                    allSubtasksAreNew = false;
-                }
-                if (subtasks.get(subtaskId).getStatus() != Status.DONE) {
-                    allSubtasksAreDone = false;
+                if (subtasks.containsKey(subtaskId)) {
+                    if (subtasks.get(subtaskId).getStatus() != Status.NEW) {
+                        allSubtasksAreNew = false;
+                    }
+                    if (subtasks.get(subtaskId).getStatus() != Status.DONE) {
+                        allSubtasksAreDone = false;
+                    }
                 }
             }
         }
@@ -108,11 +110,13 @@ public class InMemoryTaskManager implements TaskManager {
                 boolean allSubtasksAreDone = true;
                 Epic epic = epics.get(subtask.getEpicId());
                 for (Integer subtaskId : epic.getSubtasks()) {
-                    if (subtasks.get(subtaskId).getStatus() != Status.NEW) {
-                        allSubtasksAreNew = false;
-                    }
-                    if (subtasks.get(subtaskId).getStatus() != Status.DONE) {
-                        allSubtasksAreDone = false;
+                    if (subtasks.containsKey(subtaskId)) {
+                        if (subtasks.get(subtaskId).getStatus() != Status.NEW) {
+                            allSubtasksAreNew = false;
+                        }
+                        if (subtasks.get(subtaskId).getStatus() != Status.DONE) {
+                            allSubtasksAreDone = false;
+                        }
                     }
                 }
 
@@ -283,4 +287,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
     }
+
+    @Override
+    public void save() {};
 }

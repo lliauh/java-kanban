@@ -50,4 +50,6 @@ public interface TaskManager {
     List getPrioritizedTasks();
 
     void tasksTimeIntersectionValidate(Task newTask);
+
+    void save();
 }

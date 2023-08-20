@@ -115,7 +115,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         save();
     }
 
-    private void save() throws ManagerSaveException {
+    @Override
+    public void save() throws ManagerSaveException {
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(fileName.toFile(), StandardCharsets.UTF_8))) {
             fileWriter.write("id,type,name,status,description,epic,startTime,endTime,duration\n");
 

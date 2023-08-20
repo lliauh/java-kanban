@@ -57,13 +57,23 @@ public class Formatter {
         return null;
     }
 
-    private static Status extractStatusFromString(String status) {
+    public static Status extractStatusFromString(String status) {
         if (status.equals("IN_PROGRESS")) {
             return Status.IN_PROGRESS;
         } else if (status.equals("DONE")) {
             return Status.DONE;
         } else {
             return Status.NEW;
+        }
+    }
+
+    public static Type extractTypeFromString(String type) {
+        if (type.equals("TASK")) {
+            return Type.TASK;
+        } else if (type.equals("EPIC")) {
+            return Type.EPIC;
+        } else {
+            return Type.SUBTASK;
         }
     }
 

@@ -31,7 +31,7 @@ public class Task {
         this.type = Type.TASK;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -97,7 +97,10 @@ public class Task {
                 "id = " + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", status = " + status + "}";
+                ", status = " + status + '\'' +
+                ", type = " + type + '\'' +
+                ", startTime = " + startTime + '\'' +
+                ", duration = " + duration + "}";
     }
 
     @Override

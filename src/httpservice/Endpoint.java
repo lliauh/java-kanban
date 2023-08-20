@@ -1,0 +1,23 @@
+package httpservice;
+
+public enum Endpoint {
+    POST_TASK,
+    POST_EPIC,
+    POST_SUBTASK,
+    GET_TASKS,
+    GET_EPICS,
+    GET_SUBTASKS,
+    DELETE_TASKS,
+    DELETE_EPICS,
+    DELETE_SUBTASKS,
+    GET_TASK_BY_ID,
+    GET_EPIC_BY_ID,
+    GET_SUBTASK_BY_ID,
+    DELETE_TASK_BY_ID,
+    DELETE_EPIC_BY_ID,
+    DELETE_SUBTASK_BY_ID,
+    GET_SUBTASKS_BY_EPIC,
+    GET_HISTORY,
+    GET_PRIOR_TASKS,
+    UNKNOWN
+}
