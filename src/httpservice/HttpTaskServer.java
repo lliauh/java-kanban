@@ -48,10 +48,9 @@ public class HttpTaskServer {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             EnpointMethodsEnum enpointMethodsEnum;
-
             String requestPath = exchange.getRequestURI().getPath();
-
             String requestQuery = exchange.getRequestURI().getQuery();
+
             switch (exchange.getRequestMethod()) {
                 case "GET":
                     enpointMethodsEnum = getEndpointGet(requestPath, requestQuery);
