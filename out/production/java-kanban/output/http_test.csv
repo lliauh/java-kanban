@@ -1,4 +1,0 @@
-id,type,name,status,description,epic,startTime,endTime,duration
-1,TASK,Task1: название,NEW,Task1: описание,,2023-07-30T00:21:21,2023-07-30T00:41:21,20
-3,EPIC,Epic1: название,NEW,Epic1: описание,,2023-08-07T00:21:21,2023-08-07T00:41:21,20
-

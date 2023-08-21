@@ -47,10 +47,26 @@ public class HttpTaskServer {
 
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            Endpoint endpoint = getEndpoint(exchange.getRequestURI().getPath(), exchange.getRequestURI().getQuery(),
-                    exchange.getRequestMethod());
+            EnpointMethodsEnum enpointMethodsEnum;
 
-            switch (endpoint) {
+            String requestPath = exchange.getRequestURI().getPath();
+
+            String requestQuery = exchange.getRequestURI().getQuery();
+            switch (exchange.getRequestMethod()) {
+                case "GET":
+                    enpointMethodsEnum = getEndpointGet(requestPath, requestQuery);
+                    break;
+                case "POST":
+                    enpointMethodsEnum = getEndpointPost(requestPath, requestQuery);
+                    break;
+                case "DELETE":
+                    enpointMethodsEnum = getEndpointDelete(requestPath, requestQuery);
+                    break;
+                default:
+                    enpointMethodsEnum = EnpointMethodsEnum.UNKNOWN;
+            }
+
+            switch (enpointMethodsEnum) {
                 case GET_PRIOR_TASKS:
                     handleGetPriorTasks(exchange);
                     break;
@@ -110,103 +126,113 @@ public class HttpTaskServer {
             }
         }
 
-        private Endpoint getEndpoint(String requestPath, String requestQuery, String requestMethod) {
+        private EnpointMethodsEnum getEndpointGet(String requestPath, String requestQuery) {
             String[] pathSplitted = requestPath.split("/");
             int pathLength = pathSplitted.length;
             String query = requestQuery;
 
-            if (requestMethod.equals("GET")) {
-                if (pathLength == 2 && pathSplitted[1].equals("tasks")) {
-                    return Endpoint.GET_PRIOR_TASKS;
-                }
-
-                if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("history")) {
-                    return Endpoint.GET_HISTORY;
-                }
-
-                if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("task")
-                        && query == null) {
-                    return Endpoint.GET_TASKS;
-                }
-
-                if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("epic")
-                        && query == null) {
-                    return Endpoint.GET_EPICS;
-                }
-
-                if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("subtask")
-                        && query == null) {
-                    return Endpoint.GET_SUBTASKS;
-                }
-
-                if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("task")
-                        && query.startsWith("id=")) {
-                    return Endpoint.GET_TASK_BY_ID;
-                }
-
-                if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("epic")
-                        && query.startsWith("id=")) {
-                    return Endpoint.GET_EPIC_BY_ID;
-                }
-
-                if (pathLength ==3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("subtask")
-                        && query.startsWith("id=")) {
-                    return Endpoint.GET_SUBTASK_BY_ID;
-                }
-
-                if (pathLength == 4 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("subtask")
-                        && pathSplitted[3].equals("epic") && query.startsWith("id=")) {
-                    return Endpoint.GET_SUBTASKS_BY_EPIC;
-                }
+            if (pathLength == 2 && pathSplitted[1].equals("tasks")) {
+                return EnpointMethodsEnum.GET_PRIOR_TASKS;
             }
 
-            if (requestMethod.equals("POST")) {
-                if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("task")) {
-                    return Endpoint.POST_TASK;
-                }
-
-                if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("epic")) {
-                    return Endpoint.POST_EPIC;
-                }
-
-                if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("subtask")) {
-                    return Endpoint.POST_SUBTASK;
-                }
+            if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("history")) {
+                return EnpointMethodsEnum.GET_HISTORY;
             }
 
-            if (requestMethod.equals("DELETE")) {
-                if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("task")
-                        && query == null) {
-                    return Endpoint.DELETE_TASKS;
-                }
-
-                if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("epic")
-                        && query == null) {
-                    return Endpoint.DELETE_EPICS;
-                }
-
-                if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("subtask")
-                        && query == null) {
-                    return Endpoint.DELETE_SUBTASKS;
-                }
-
-                if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("task")
-                        && query.startsWith("id=")) {
-                    return Endpoint.DELETE_TASK_BY_ID;
-                }
-
-                if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("epic")
-                        && query.startsWith("id=")) {
-                    return Endpoint.DELETE_EPIC_BY_ID;
-                }
-
-                if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("subtask")
-                        && query.startsWith("id=")) {
-                    return Endpoint.DELETE_SUBTASK_BY_ID;
-                }
+            if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("task")
+                    && query == null) {
+                return EnpointMethodsEnum.GET_TASKS;
             }
 
-            return Endpoint.UNKNOWN;
+            if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("epic")
+                    && query == null) {
+                return EnpointMethodsEnum.GET_EPICS;
+            }
+
+            if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("subtask")
+                    && query == null) {
+                return EnpointMethodsEnum.GET_SUBTASKS;
+            }
+
+            if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("task")
+                    && query.startsWith("id=")) {
+                return EnpointMethodsEnum.GET_TASK_BY_ID;
+            }
+
+            if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("epic")
+                    && query.startsWith("id=")) {
+                return EnpointMethodsEnum.GET_EPIC_BY_ID;
+            }
+
+            if (pathLength ==3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("subtask")
+                    && query.startsWith("id=")) {
+                return EnpointMethodsEnum.GET_SUBTASK_BY_ID;
+            }
+
+            if (pathLength == 4 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("subtask")
+                    && pathSplitted[3].equals("epic") && query.startsWith("id=")) {
+                return EnpointMethodsEnum.GET_SUBTASKS_BY_EPIC;
+            }
+
+            return EnpointMethodsEnum.UNKNOWN;
+        }
+
+        private EnpointMethodsEnum getEndpointPost(String requestPath, String requestQuery) {
+            String[] pathSplitted = requestPath.split("/");
+            int pathLength = pathSplitted.length;
+            String query = requestQuery;
+
+            if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("task")) {
+                return EnpointMethodsEnum.POST_TASK;
+            }
+
+            if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("epic")) {
+                return EnpointMethodsEnum.POST_EPIC;
+            }
+
+            if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("subtask")) {
+                return EnpointMethodsEnum.POST_SUBTASK;
+            }
+
+            return EnpointMethodsEnum.UNKNOWN;
+        }
+
+        private EnpointMethodsEnum getEndpointDelete(String requestPath, String requestQuery) {
+            String[] pathSplitted = requestPath.split("/");
+            int pathLength = pathSplitted.length;
+            String query = requestQuery;
+
+            if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("task")
+                    && query == null) {
+                return EnpointMethodsEnum.DELETE_TASKS;
+            }
+
+            if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("epic")
+                    && query == null) {
+                return EnpointMethodsEnum.DELETE_EPICS;
+            }
+
+            if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("subtask")
+                    && query == null) {
+                return EnpointMethodsEnum.DELETE_SUBTASKS;
+            }
+
+            if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("task")
+                    && query.startsWith("id=")) {
+                return EnpointMethodsEnum.DELETE_TASK_BY_ID;
+            }
+
+            if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("epic")
+                    && query.startsWith("id=")) {
+                return EnpointMethodsEnum.DELETE_EPIC_BY_ID;
+            }
+
+            if (pathLength == 3 && pathSplitted[1].equals("tasks") && pathSplitted[2].equals("subtask")
+                    && query.startsWith("id=")) {
+                return EnpointMethodsEnum.DELETE_SUBTASK_BY_ID;
+            }
+
+            return EnpointMethodsEnum.UNKNOWN;
         }
 
         private void writeResponse(HttpExchange exchange, String responseString, int responseCode) throws IOException {

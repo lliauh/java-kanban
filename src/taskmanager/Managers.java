@@ -6,7 +6,7 @@ public class Managers {
     }
 
     public static TaskManager getFileBackedManager() {
-        return new FileBackedTasksManager("src/output/http_test.csv");
+        return new FileBackedTasksManager("output/http_test.csv");
     }
 
     public static HistoryManager getDefaultHistory() {

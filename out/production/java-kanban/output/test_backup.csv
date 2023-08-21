@@ -1,4 +1,0 @@
-id,type,name,status,description,epic,startTime,endTime,duration
-1,EPIC,Test1,NEW,Test1 description,,null,null,null
-2,SUBTASK,Test2,NEW,Test2 description,1,null,null,null
-

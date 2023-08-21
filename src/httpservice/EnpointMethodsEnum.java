@@ -1,6 +1,6 @@
 package httpservice;
 
-public enum Endpoint {
+public enum EnpointMethodsEnum {
     POST_TASK,
     POST_EPIC,
     POST_SUBTASK,

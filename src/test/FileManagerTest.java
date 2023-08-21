@@ -19,18 +19,18 @@ public class FileManagerTest extends TaskManagerTest {
 
     @BeforeEach
     public void createManager() {
-        taskManager = new FileBackedTasksManager("src/output/test_backup.csv");
+        taskManager = new FileBackedTasksManager("output/test_backup.csv");
     }
 
     @Test
     public void saveAndLoadTestEmptyTasksAndHistory() {
-        TaskManager manager = new FileBackedTasksManager("src/output/test_load_save_empty.csv");
+        TaskManager manager = new FileBackedTasksManager("output/test_load_save_empty.csv");
         Task task1 = new Task("Таск1: первое название", "Таск1: первое описание");
         manager.createTask(task1);
         manager.removeAllTasks();
 
         TaskManager managerFromFile = FileBackedTasksManager.loadFromFile(new
-                File("src/output/test_load_save_empty.csv"));
+                File("output/test_load_save_empty.csv"));
 
         assertTrue(managerFromFile.getAllTasks().isEmpty(), "Проблема в загрузке пустого файла.");
         assertTrue(managerFromFile.getHistory().isEmpty(), "Проблема в загрузке пустого файла.");
@@ -38,13 +38,13 @@ public class FileManagerTest extends TaskManagerTest {
 
     @Test
     public void saveAndLoadEpicWithoutSubtasks() {
-        TaskManager manager = new FileBackedTasksManager("src/output/test_load_save_epic.csv");
+        TaskManager manager = new FileBackedTasksManager("output/test_load_save_epic.csv");
         Epic epic1 = new Epic("Epic1: первое название", "Epic1: первое описание");
         manager.createEpic(epic1);
         manager.getEpicById(epic1.getId());
 
         TaskManager managerFromFile = FileBackedTasksManager.loadFromFile(new
-                File("src/output/test_load_save_epic.csv"));
+                File("output/test_load_save_epic.csv"));
 
         assertEquals(manager.getAllEpics(), managerFromFile.getAllEpics(), "Проблема в загрузке эпика " +
                 "без подзадач");
@@ -52,7 +52,7 @@ public class FileManagerTest extends TaskManagerTest {
 
     @Test
     public void saveAndLoadTest() {
-        TaskManager manager = new FileBackedTasksManager("src/output/test_load_save.csv");
+        TaskManager manager = new FileBackedTasksManager("output/test_load_save.csv");
         Task task1 = new Task("Task1: название", "Task1: описание",
                 LocalDateTime.parse("2023-07-30T00:21:21"), 20);
         Task task2 = new Task("Task2: название", "Task2: описание",
@@ -78,7 +78,7 @@ public class FileManagerTest extends TaskManagerTest {
         manager.getEpicById(epic1.getId());
 
         TaskManager managerFromFile = FileBackedTasksManager.loadFromFile(new
-                File("src/output/test_load_save.csv"));
+                File("output/test_load_save.csv"));
 
         assertEquals(manager.getAllTasks(), managerFromFile.getAllTasks(), "Проблема в загрузке из файла.");
         assertEquals(manager.getAllSubtasks(), managerFromFile.getAllSubtasks(), "Проблема в " +

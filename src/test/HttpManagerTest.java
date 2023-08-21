@@ -9,9 +9,7 @@ import httpservice.HttpTaskServer;
 import httpservice.KVServer;
 import httpservice.LocalDateTimeAdapter;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.Status;
@@ -21,14 +19,12 @@ import taskmanager.HttpTaskManager;
 import taskmanager.Managers;
 import taskmanager.TaskManager;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
-
-import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,16 +1,25 @@
+import com.sun.net.httpserver.HttpServer;
 import taskmanager.*;
 import task.*;
 import httpservice.*;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.time.LocalDateTime;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
         new KVServer().start();
+        HttpServer httpServer = HttpServer.create();
 
         HttpTaskManager manager = new HttpTaskManager("http://localhost:8078/");
+
+        httpServer.bind(new InetSocketAddress(8080), 0);
+        httpServer.createContext("/tasks", new HttpTaskServer.TasksHandler(manager));
+        httpServer.start();
+
+        System.out.println("HTTP-сервер запущен на " + 8080 + " порту!");
 
         Task task1 = new Task("Task1: название", "Task1: описание",
                 LocalDateTime.parse("2023-07-30T00:21:21"), 20);
